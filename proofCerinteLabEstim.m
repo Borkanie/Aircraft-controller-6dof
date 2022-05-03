@@ -1,4 +1,6 @@
 %kalman proof pt lab
+clear
+clc
 newSys
 x0=zeros(9,1);
 xest0=zeros(9,1);
