@@ -1,4 +1,4 @@
-function dxdt = aircraftSystem(x,u)
+function dxdt = aircraftSystem(x,u,d)
 obj=aircraft();
 g=9.81;
 %take inputs from vector
@@ -8,22 +8,26 @@ DeltaRud=u(3);
 DeltaAlL=u(4);
 DeltaAlR=u(5);
 %take states from vector
-u=x(1); 
-v=x(2);
-w=x(3);
+u=x(1)-d(1); 
+v=x(2)-d(2);
+w=x(3)-d(3);
 p=x(4);
 q=x(5);
 r=x(6);
-Phi=x(7);
-Theta=x(8);
-Psi=x(9);
+Phi=(x(7));
+Theta=(x(8));
+Psi=(x(9));
 px=x(10);
 py=x(11);
 pz=x(12);
+%vant in earth system
+R=Rearth2body(Phi,Theta,Psi);
+d=R*d;
+
 
 alpha=atan2(w,u);
 beta=atan2(v,u);
-Va2=u^2+v^2+w^2;
+Va2=(u)^2+(v)^2+(w)^2;
 Cdw=0.0115*alpha*180/pi+1;
 Cdfus=0.075*alpha*180/pi+1;
 CyFus=0.075*beta*180/pi;
@@ -40,7 +44,7 @@ l_fus=0.01;
 Ft=[T;0;0];
 % fara vant alpha=theta
 % beta=psi
-F=Ft+Rearth2body(0,Theta,Psi)*Fa+Rearth2body(Phi,Theta,Psi)*G;
+F=Ft+Rearth2body(0,Theta,Psi)*Fa+R*G;
 
 L_bar=obj.l3*obj.Aaileron*(ClwL-ClwR)*obj.ro*Va2/2;
 M=(obj.l1*Clw*obj.Aw+ClSt*obj.l2*obj.Ast)*obj.ro*Va2/2;
@@ -50,6 +54,5 @@ Moments=[L_bar;M;N];
 dxdt=[F/obj.m-cross([p;q;r],[u;v;w]);
     obj.Iinv*(Moments-cross([p;q;r],obj.I*[p;q;r]));
     H(Phi,Theta)*[p;q;r];
-    Rbody2earth(Phi,Theta,Psi)*[u;v;w]];
-dxdt(12)=-dxdt(12);
+    Rbody2earth(-Phi,-Theta,-Psi)*[u;v;w]];
 end

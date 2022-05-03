@@ -12,7 +12,7 @@ Theta0=atan2(v0,u0);
 pointOfEquilibrium=PointOfEquilibrium([u0;0;v0;0;0;0;0;Theta0;0;0;0;100].', ...
     [5.576,0,0,0,0]);
 
-sys=aircraftSystem(states,inputs);
+sys=aircraftSystem(states,inputs,[0;0;0]);
 vpa(sys,4);
 round(subs(sys,[states inputs],[pointOfEquilibrium.States pointOfEquilibrium.Inputs]),4)
 [A,B]=Stab(sys,states,inputs,pointOfEquilibrium);

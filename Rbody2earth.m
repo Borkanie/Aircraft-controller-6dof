@@ -1,3 +1,3 @@
 function [R] = Rbody2earth(Phi,Theta,Psi)
-R=rotx(Phi)*roty(Theta)*rotz(Psi);
+R=rotz(Psi).'*roty(Theta).'*rotx(Phi).';
 end
