@@ -6,8 +6,10 @@ x0=zeros(9,1);
 xest0=zeros(9,1);
 %%
 %kalman filter
-KalmanFilterForLinearSystem(Amd,Bmd,Cmd,Kmd,x0,xest0,pointOfEquilibrium)
 
+KalmanFilterForLinearSystem(Amd,Bmd,Cmd,Kmd,x0,xest0,pointOfEquilibrium)
+%%
+%kalman extins
 KalmanFilterExtendedForLinearSystem(sys(1:9),states(1:9),inputs,Kmd,x0,xest0,pointOfEquilibrium)
 %%
 %decuplare

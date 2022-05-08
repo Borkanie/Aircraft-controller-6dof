@@ -30,8 +30,8 @@ Ve=[sqrt(sum(pointOfEquilibrium.States(1:3).^2)),0,0];
 
 
 %% controller lienar de stare pe 9 stari
-Am=double(round(A(1:9,1:9),2));
-Bm=double(round(B(1:9,1:5),2));
+Am=double(round(A(1:9,1:9),4));
+Bm=double(round(B(1:9,1:5),4));
 
 %verificam controlabilitate
 rank(ctrb(Am,Bm))
@@ -41,20 +41,19 @@ P=[-1.9,-1.8,-3,-2.4,-2.7,-1,-3,-3.1,-2.9];
 Km=place(Am,Bm,P)
 %verificam rezultat
 eig(Am-Bm*Km)
+Cnew=subs(systemGradient([Rearth2body(-Phi,-Theta,-Psi)*[u;v;w]],states),[states inputs],[pointOfEquilibrium.States pointOfEquilibrium.Inputs]);
+Cnew=double(Cnew(:,1:9));
 %%  estimator de stare in continuu
 %scopul este sa estimam X7 X8 X9
 Cm=eye(9);
-Cm(4,4)=0;
-Cm(5,5)=0;
-Cm(6,6)=0;
 %verificam observabilitate
 rank(obsv(Am,Cm))
 errorest=zeros(1,12);
 errorest(1,1)=1.1;
-ObsPoles=[-.1,-.2,-.3,-.4,-.5,-.6,-.7,-.8,-.9];
+ObsPoles=[-1.15,-1.25,-1.35,-2.45,-3.5,-3.6,-3.7,-3.8,-5];
 L=place(Am',Cm',ObsPoles).'
 eig(Am-L*Cm)
-%% estimator de stare in discret
+%% estimator de stare in discret cu control pe lienar
 %perioada de esantionara
 Ts=.1;
 %o perioada mai mica nu ar permite timp de calcul destul de mare pe masina
@@ -64,33 +63,21 @@ Bmd=Ts*Bm;
 Cmd=Cm;
 %verificam observabilitate
 rank(obsv(Amd,Cmd))
-errorest=zeros(1,12);
-errorest(1,1)=1.1;
-%observer discret
-%impunem poli
+
 ObsPoles=[-2,-2.5,-3,-3.3,-.5,-5,-6.7,-4.7,-5.6];
 Ld=place(Amd',Cmd',ObsPoles).';
 eig(Amd-Ld*Cmd)
 %controller discret
 %impunem poli
 Q=eye(9);
-Q(1:3,:)=1/10*Q(1:3,:);
-R=eye(5);
-R(1,:)=1/10*R(1,:);
-
-Kmd=lqr(Am-Ld*Cmd,Bm,Q,R);
-Kmd(2,:)=Kmd(2,:)/2;
-Kmd(3,:)=-Kmd(3,:);
-Kmd(3,9)=-Kmd(3,9)*10;
-Kmd(3,7)=Kmd(3,7)*10;
-Kmd(4,:)=-Kmd(4,:);
-Kmd(4,7)=Kmd(4,7)*10;
-Kmd(4,9)=Kmd(4,9)*50;
-Kmd(4,2)=-Kmd(4,2)
-Km
-%verificam rezultat
-
-%% estimator de stare in discret
+Q(1,:)=Q(1,:);
+Q(7,:)=2*Q(7,:);
+Q(9,:)=2*Q(9,:);
+Q(7:9,:)=1000*Q(7:9,:);
+R=1/10*eye(5);
+R(1,:)=1/5*R(1,:);
+Kmd=lqr(Am-Ld*Cmd,Bm,Q,R)
+%% estimator de stare in discret cu control pe nelienar
 %perioada de esantionara
 Ts=.1;
 %o perioada mai mica nu ar permite timp de calcul destul de mare pe masina
@@ -100,24 +87,22 @@ Bmd=Ts*Bm;
 Cmd=Cm;
 %verificam observabilitate
 rank(obsv(Amd,Cmd))
-errorest=zeros(1,12);
-errorest(1,1)=1.1;
+
 %observer discret
 %impunem poli
-ObsPoles=[-2,-2.5,-3,-3.3,-.5,-5,-6.7,-4.7,-5.6];
+ObsPoles=[-.2,-.55,-.8,-.33,-.5,-.5,-.67,-.47,-.56]*10;
 Ld=place(Amd',Cmd',ObsPoles).';
 eig(Amd-Ld*Cmd)
 %controller discret
+%controller discret
 %impunem poli
 Q=eye(9);
-Q(1,1)=25;
-Q(7,7)=1;
-Q(5,5)=25;
-Q(6,6)=1;
-Q(9,9)=1;
-R=eye(5);
-R(1,:)=1*R(1,:);
-Kmd=lqr(Am,Bm,Q,R)
-Km
-%verificam rezultat
-%eig(Amd-Bmd*Kmd)
+Q(1,:)=2*Q(1,:);
+Q(2,:)=2*Q(2,:);
+Q(3,:)=2*Q(3,:);
+Q(4:6,:)=5*Q(4:6,:);
+R=1/15*eye(5);
+R(1,:)=1/5*R(1,:);
+Kmdnl=lqr(Am-Ld*Cmd,Bm,Q,R)
+
+
