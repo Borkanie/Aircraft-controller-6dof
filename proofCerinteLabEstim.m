@@ -2,15 +2,14 @@
 clear
 clc
 newSys
-x0=zeros(9,1);
-xest0=zeros(9,1);
+
+%kalman extins
+KalmanFilterExtendedForLinearSystem(jordanA(1:9,1:9),jordanB(1:9,:),states(1:9),inputs,Kmd,zeros(9,1),pointOfEquilibrium,Amd,Bmd,Ts)
 %%
 %kalman filter
 
-KalmanFilterForLinearSystem(Amd,Bmd,Cmd,Kmd,x0,xest0,pointOfEquilibrium)
-%%
-%kalman extins
-KalmanFilterExtendedForLinearSystem(sys(1:9),states(1:9),inputs,Kmd,x0,xest0,pointOfEquilibrium)
+KalmanFilterForLinearSystem(Amd,Bmd,Cmd,Kmd,x0,pointOfEquilibrium)
+
 %%
 %decuplare
 clear 

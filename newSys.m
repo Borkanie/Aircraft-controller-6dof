@@ -16,6 +16,8 @@ sys=aircraftSystem(states,inputs,[0;0;0]);
 vpa(sys,4);
 round(subs(sys,[states inputs],[pointOfEquilibrium.States pointOfEquilibrium.Inputs]),4)
 [A,B]=Stab(sys,states,inputs,pointOfEquilibrium);
+jordanA=systemGradient(sys,states);
+jordanB=systemGradient(sys,inputs);
 A=double(round(A,4));
 B=double(round(B,4));
 C=[zeros(3,9) eye(3)];
