@@ -1,6 +1,6 @@
 function [xest,P,Ad,Bd] = KalmanFilterExtendedCox(jordanA,jordanB, states, inputs, xest,xpred, u, P, Q, Cd, R, y,Ts,punctDeEchilibru)
-    Anew=subs(jordanA,[states inputs],[xest.'+punctDeEchilibru.States.' u.'+punctDeEchilibru.Inputs.']);
-    Bnew=subs(jordanB,[states inputs],[xest.'+punctDeEchilibru.States.' u.'+punctDeEchilibru.Inputs.']);
+    Anew=subs(jordanA,[states inputs],[xest.'+punctDeEchilibru.States.' u.']);
+    Bnew=subs(jordanB,[states inputs],[xest.'+punctDeEchilibru.States.' u.']);
     %liniarizam in jurul noilui punct de echilibri
     Ad=eye(9)+Ts*double(round(Anew,4));
     Bd=Ts*double(round(Bnew,4));

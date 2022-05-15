@@ -1,12 +1,12 @@
-function [] = KalmanFilterForLinearSystem(Ad,Bd,Cd,Kd,x0,punctDeEchilibru)
-R=eye(9)*1000;
-Q=eye(9);
+function [] = KalmanFilterForLinearSystem(Ad,Bd,Cd,Kd,punctDeEchilibru)
+R=eye(9)*100;
+Q=eye(9)*10;
 %pedictie de precizie intiala
-P=eye(9);
+P=eye(9)/100000;
 %numar de iterati
-iter=150;
+iter=20;
 Ts=0.1;
-x=x0;
+x=punctDeEchilibru.States(1:9).';
 xest=zeros(9,1);
 for n=2:iter
     u(:,n-1)=-Kd*(xest(:,n-1))+punctDeEchilibru.Inputs.';
