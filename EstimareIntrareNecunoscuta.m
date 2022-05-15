@@ -1,4 +1,4 @@
-function  [AEmd,BEmd,CEmd,LEd]=EstimareIntrareNecunoscuta(sys,perturbations,jordanA,jordanB,states,inputs,Kd,punctDeEchilibru,Ad,Bd,Ts)
+function  [AEmd,BEmd,CEmd,LEd]=EstimareIntrareNecunoscuta(sys,perturbations,jordanA,jordanB,states,inputs,Kd,punctDeEchilibru,Ts)
 jordanE=systemGradient(sys,perturbations)
 vant=[1,1,1]*0;
 JA=[jordanA,jordanE(1:9,:);zeros(3,12)];
@@ -10,7 +10,6 @@ rank(obsv(AE,CE))
 
 % estimator de stare in discret cu control pe nelienar
 %perioada de esantionara
-Ts=.1;
 %o perioada mai mica nu ar permite timp de calcul destul de mare pe masina
 %de la bordul avionului
 AEmd=double(eye(12)+Ts*AE);
