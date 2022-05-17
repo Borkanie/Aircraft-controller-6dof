@@ -9,6 +9,10 @@ newSys
 KalmanFilterForLinearSystem(Amd,Bmd,Cmd,Kmd,pointOfEquilibrium)
 %%
 %kalman extins
+RExt=eye(9);
+RExt(1:3,1:3)=RExt(1:3,1:3)*100;
+QExt=eye(9);
+QExt(4:9,4:9)=QExt(4:9,4:9)/10;
 KalmanFilterExtendedForLinearSystem(jordanA(1:9,1:9),jordanB(1:9,:), ...
     states(1:9),inputs,Kmd,pointOfEquilibrium,Amd,Bmd,Ts)
 

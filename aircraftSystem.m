@@ -3,10 +3,10 @@ obj=aircraft();
 g=9.81;
 %take inputs from vector
 T=u(1);
-DeltaSt=u(2);
-DeltaRud=u(3);
-DeltaAlL=u(4);
-DeltaAlR=u(5);
+DeltaSt=getAngle(u(2));
+DeltaRud=getAngle(u(3));
+DeltaAlL=getAngle(u(4));
+DeltaAlR=getAngle(u(5));
 %take states from vector
 u=x(1)-d(1); 
 v=x(2)-d(2);

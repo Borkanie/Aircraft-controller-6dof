@@ -5,7 +5,7 @@ function [xest,P,Ad,Bd] = KalmanFilterExtendedCox(jordanA,jordanB, states, input
     intrari(4)=getAngle(intrari(4));
     intrari(5)=getAngle(intrari(5));
     Anew=subs(jordanA,[states inputs],[xest.'+punctDeEchilibru.States.' intrari.']);
-    Bnew=subs(jordanB,[states inputs],[xest.'+punctDeEchilibru.States.' intrari.']);
+    Bnew=subs(jordanB,[states inputs],[xest.'+punctDeEchilibru.States.' u.']);
     %liniarizam in jurul noilui punct de echilibri
     Ad=eye(9)+Ts*double(round(Anew,4));
     Bd=Ts*double(round(Bnew,4));

@@ -4,5 +4,9 @@ function [rad] = getAngle(angle)
 rad=rem(angle,2*pi);
 if rad>pi
     rad=rad-2*pi;
+else
+    if rad<-pi
+        rad=rad+2*pi;
+    end
 end
 end

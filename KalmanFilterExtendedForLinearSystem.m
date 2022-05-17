@@ -2,28 +2,32 @@ function [] = KalmanFilterExtendedForLinearSystem(jordanA,jordanB,states,inputs,
 punctDeEchilibru=PointOfEquilibrium(punctDeEchilibru.States(1:9).',punctDeEchilibru.Inputs.');
 po=punctDeEchilibru;
 R=eye(9);
+R(1:3,1:3)=R(1:3,1:3)*100;
 Q=eye(9);
+Q(4:9,4:9)=Q(4:9,4:9)/10;
 %pedictie de precizie intiala
 P=eye(9)/100000;
 %numar de iterati
-iter=20;
+iter=10;
 Cd=eye(9);
 x=punctDeEchilibru.States(1:9);
 xest=zeros(9,1);
 y=x;
 for n=2:iter
-    u(:,n-1)=-Kd*xest(:,n-1)+punctDeEchilibru.Inputs;
-    process_noise=(rand(3,1)-rand(3,1))*0.3;
+    u(:,n-1)=-Kd*(x(:,n-1)-po.States)+punctDeEchilibru.Inputs;
+    process_noise=(rand(3,1)-rand(3,1))*0;
     dxdt=aircraftSystem([x(:,n-1);0;0;0],u(:,n-1),process_noise);
     x(:,n)=x(:,n-1)+dxdt(1:9)*Ts;
-    reading_noise=(rand(9,1)-rand(9,1))*0.1;
+    reading_noise=[(rand(3,1)-rand(3,1))*.5;
+        (rand(3,1)-rand(3,1))*.1;
+        (rand(3,1)-rand(3,1))*.1;];
     y(:,n)=Cd*x(:,n)+reading_noise;
     
     xpred=Ad*(xest(:,n-1))+Bd*(u(:,n-1)-punctDeEchilibru.Inputs);
     [xpred,P,Ad,Bd] = KalmanFilterExtendedCox(jordanA,jordanB, states, ...
         inputs,xest(:,n-1), xpred, u(:,n-1), P, Q, Cd, R, y(:,n),Ts,punctDeEchilibru);
      xest(:,n)=xpred;
-    punctDeEchilibru=PointOfEquilibrium(xest(:,n)+punctDeEchilibru.States,u(:,n-1));
+    punctDeEchilibru=PointOfEquilibrium(xest(:,n-1)+punctDeEchilibru.States,u(:,n-1));
    
     
 end
