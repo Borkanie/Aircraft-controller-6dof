@@ -1,11 +1,6 @@
-function  [E,AEmd,BEmd,CEmd,LEd,vant]=EstimareIntrareNecunoscuta(sys,perturbations,jordanA,jordanB,states,inputs,Kd,punctDeEchilibru,Ts)
+function  [AEmd,BEmd,CEmd,LEd]=EstimareIntrareNecunoscuta(sys,perturbations,jordanA,jordanB,states,inputs,Kd,punctDeEchilibru,Ts)
 jordanE=systemGradient(sys,perturbations);
-vant=[.01,.01,.01];
-punctDeEchilibru.States(1:3)=punctDeEchilibru.States(1:3)-vant;
-
-
-E=double(subs(jordanE,[states,inputs,perturbations.'], ...
-    [punctDeEchilibru.States(1:9),punctDeEchilibru.Inputs,vant]));
+vant=[1,-1,1]*100;
 JA=[jordanA,jordanE(1:9,:);zeros(3,12)];
 JB=[jordanB;zeros(3,5)];
 AE=subs(JA,[states,inputs,perturbations.'], ...
@@ -27,10 +22,10 @@ rank(obsv(AEmd,CEmd))
 
 %observer discret
 %impunem poli
-ObsPoles=[-5.1,-4.2,-3.3,-4.7,-5,-1.6,-3,-4,-2,-5.1,-4.2,-3.3];
-LEd=place(AEmd',CEmd',ObsPoles).'
-eig(AEmd-LEd*CEmd);
+ObsPoles=[-1,-2,-3,-4,-5,-6,-7,-8,-9,-10,-11,-12];
+LEd=place(AEmd',CEmd',ObsPoles).';
+eig(AEmd-LEd*CEmd)
 
-rank(ctrb(AEmd,BEmd));
+rank(ctrb(AEmd,BEmd))
 
 end
