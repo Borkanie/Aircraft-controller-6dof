@@ -9,12 +9,17 @@ newSys
 KalmanFilterForLinearSystem(Amd,Bmd,Cmd,Kmd,pointOfEquilibrium)
 %%
 %kalman extins
-RExt=eye(9);
-RExt(1:3,1:3)=RExt(1:3,1:3)*100;
-QExt=eye(9);
-QExt(4:9,4:9)=QExt(4:9,4:9)/10;
-KalmanFilterExtendedForLinearSystem(jordanA(1:9,1:9),jordanB(1:9,:), ...
-    states(1:9),inputs,Kmd,pointOfEquilibrium,Amd,Bmd,Ts)
+%impunem poli
+Q=eye(9);
+Q(1,:)=Q(1,:);
+Q(7,:)=2*Q(7,:);
+Q(9,:)=2*Q(9,:);
+Q(7:9,:)=10*Q(7:9,:);
+R=1/10*eye(5);
+R(1,:)=1/5*R(1,:);
+Km1=lqr(Am,Bm,Q,R)
+[RExt,QExt]=KalmanFilterExtendedForLinearSystem(jordanA(1:9,1:9),jordanB(1:9,:), ...
+    states(1:9),inputs,Km1,pointOfEquilibrium,Amd,Bmd,Ts)
 
 %%
 %estimare intrare necunoscuta

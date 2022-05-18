@@ -27,7 +27,8 @@ error=zeros(1,12);
 error(1,1)=0.1;
 % stari initiale in sistem inertial
 Ve=[sqrt(sum(pointOfEquilibrium.States(1:3).^2)),0,0];
-
+%perioada de esantionara
+Ts=.1;
 
 
 
@@ -45,6 +46,7 @@ Km=place(Am,Bm,P)
 eig(Am-Bm*Km)
 Cnew=subs(systemGradient([Rearth2body(-Phi,-Theta,-Psi)*[u;v;w]],states),[states inputs],[pointOfEquilibrium.States pointOfEquilibrium.Inputs]);
 Cnew=double(Cnew(:,1:9));
+
 %%  estimator de stare in continuu
 %scopul este sa estimam X7 X8 X9
 Cm=eye(9);
@@ -56,8 +58,7 @@ ObsPoles=[-1.15,-1.25,-1.35,-2.45,-3.5,-3.6,-3.7,-3.8,-5];
 L=place(Am',Cm',ObsPoles).'
 eig(Am-L*Cm)
 %% estimator de stare in discret cu control pe lienar
-%perioada de esantionara
-Ts=.1;
+
 %o perioada mai mica nu ar permite timp de calcul destul de mare pe masina
 %de la bordul avionului
 Amd=(eye(9)+Ts*Am);
