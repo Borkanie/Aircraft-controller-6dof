@@ -1,4 +1,4 @@
-function  [AEmd,BEmd,CEmd,F,T,K,H]=decuplare(sys,perturbations,jordanA,jordanB,states,inputs,Kd,punctDeEchilibru,Ts)
+function  [AEmd,BEmd,CEmd,F,T,K,H,E]=decuplare(sys,perturbations,jordanA,jordanB,states,inputs,Kd,punctDeEchilibru,Ts)
 jordanE=systemGradient(sys,perturbations)
 vant=[1,1,1]*0;
 E=subs(jordanE,[states,inputs,perturbations.'],[punctDeEchilibru.States(1:9),punctDeEchilibru.Inputs,vant]);
@@ -32,5 +32,7 @@ eig(Adecup-H*CE*Adecup-K1*CE)
 F=T*Adecup-K1*CE
 K2=F*H
 K=K1+K2;
+
+
 
 end

@@ -1,18 +1,21 @@
 clear 
 clc
-obj=aircraft();
-syms T DeltaSt DeltaRud DeltaAlL DeltaAlR
-syms u v w px py pz Phi Theta Psi p q r
-inputs=[T,DeltaSt,DeltaRud,DeltaAlL,DeltaAlR];
-states=[u v w p q r Phi Theta Psi px py pz];
+
 
 u0=11.45;
 v0=1.66464;
 Theta0=atan2(v0,u0);
-pointOfEquilibrium=PointOfEquilibrium([u0;0;v0;0;0;0;0;Theta0;0;0;0;100].', ...
-    [5.576,0,0,0,0]);
+operationStates=[u0;0;v0;0;0;0;0;Theta0;0;0;0;100];
+operatingInputs=[5.576,0,0,0,0];
+operatingWinds=[0;0;0];
 
-sys=aircraftSystem(states,inputs,[0;0;0]);
+pointOfEquilibrium=PointOfEquilibrium(operationStates.', operatingInputs );
+syms T DeltaSt DeltaRud DeltaAlL DeltaAlR
+syms u v w px py pz Phi Theta Psi p q r
+inputs=[T,DeltaSt,DeltaRud,DeltaAlL,DeltaAlR];
+states=[u v w p q r Phi Theta Psi px py pz];
+obj=aircraft();
+sys=aircraftSystem(states,inputs,operatingWinds);
 vpa(sys,4);
 round(subs(sys,[states inputs],[pointOfEquilibrium.States pointOfEquilibrium.Inputs]),4)
 [A,B]=Stab(sys,states,inputs,pointOfEquilibrium);
