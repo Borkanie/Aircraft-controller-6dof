@@ -1,9 +1,9 @@
 function [pointOfEquilibrium,Am,Bm,Cnew,Km] = ControllerAroundPointOfOperation(operationStates,operatingInputs,operatingWinds)
 pointOfEquilibrium=PointOfEquilibrium(operationStates.', operatingInputs );
 syms T DeltaSt DeltaRud DeltaAlL DeltaAlR
-syms u v w px py pz Phi Theta Psi p q r
+syms u v w Pozx Pozy Pozz Phi Theta Psi p q r
 inputs=[T,DeltaSt,DeltaRud,DeltaAlL,DeltaAlR];
-states=[u v w p q r Phi Theta Psi px py pz];
+states=[u v w p q r Phi Theta Psi Pozx Pozy Pozz];
 obj=aircraft();
 sys=aircraftSystem(states,inputs,operatingWinds);
 vpa(sys,4);
