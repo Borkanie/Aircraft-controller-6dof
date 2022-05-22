@@ -70,7 +70,7 @@ Cmd=Cm;
 %verificam observabilitate
 rank(obsv(Amd,Cmd))
 
-ObsPoles=[-2,-2.5,-3,-3.3,-.5,-5,-6.7,-4.7,-5.6]*Ts;
+ObsPoles=[-2,-2.5,-3,-3.3,-.5,-5,-6.7,-4.7,-5.6];
 Ld=place(Amd',Cmd',ObsPoles).';
 eig(Amd-Ld*Cmd)
 %controller discret
