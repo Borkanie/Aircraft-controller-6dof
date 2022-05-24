@@ -1,7 +1,22 @@
 vitezaRelevanta=6.5:16.5;
 vitezaUnghiularaRelevanta=-0.3:0.05:0.3;
 unhiRelevant=-0.7854:0.1:0.7854;
-vantRelevant=-5:0.5:5;
+vantRelevant=-3:0.5:3;
+%some function that will return all the states around a different
+%operating point described solely by angles and wind starting from
+%point of equilibrium
+[UW,VW,WW]=meshgrid(vantRelevant,vantRelevant,vantRelevant);
+U=zeros(13,13,13);
+V=zeros(13,13,13);
+W=zeros(13,13,13);
+S=size(WW);
+for i=1:S(1)
+    for j=1:S(1)
+        for k=1:S(1)
+            pointOfEquilibrium = GetEquilibriumPoint(UW(i),VW(j),WW(k));
+        end
+    end
+end
 %%
 u0=11.45;
 v0=1.66464;
