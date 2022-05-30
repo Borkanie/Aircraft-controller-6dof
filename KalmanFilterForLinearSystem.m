@@ -1,6 +1,6 @@
 function [] = KalmanFilterForLinearSystem(Ad,Bd,Cd,Kd,punctDeEchilibru)
-R=eye(9)*100;
-Q=eye(9)*10;
+R=eye(9)*3;
+Q=eye(9)*1;
 %pedictie de precizie intiala
 P=eye(9)/100000;
 %numar de iterati
@@ -8,14 +8,15 @@ iter=20;
 Ts=0.1;
 x=punctDeEchilibru.States(1:9).';
 xest=zeros(9,1);
+y=x;
 for n=2:iter
     u(:,n-1)=-Kd*(xest(:,n-1))+punctDeEchilibru.Inputs.';
-    process_noise=(rand(9,1)-rand(9,1))*0.5;
-    dxdt=aircraftSystem([x(:,n-1);0;0;0],u(:,n-1),process_noise(1:3));
+    process_noise=(rand(3,1)-rand(3,1))*0;
+    dxdt=aircraftSystem([x(:,n-1);0;0;0],u(:,n-1),process_noise);
     x(:,n)=x(:,n-1)+dxdt(1:9)*Ts;
     reading_noise=(rand(9,1)-rand(9,1))*.2;
     y(:,n)=Cd*x(:,n)+reading_noise;
-    [xpred,P]=KalmanFilterNoCap(Ad, Bd, (y(:,n)-punctDeEchilibru.States(1:9).'), ...
+    [xpred,P]=KalmanFilterNoCap(Ad, Bd, (y(:,n)-Cd*(punctDeEchilibru.States(1:9).')), ...
         Cd, xest(:,n-1), u(:,n-1)-punctDeEchilibru.Inputs.', P, Q, R);
     xest(:,n)=xpred;
 end
