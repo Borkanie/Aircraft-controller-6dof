@@ -18,6 +18,7 @@ Kmd=dlqr(Amd,Bmd,Q,R);
 %kalman filter
 %KalmanFilterForLinearSystem(Amd,Bmd,Cm,Kmd,pointOfEquilibrium)
 %extindere stare perturbatie
+E(4,2)=100*E(4,2);
 AE=[Am,E(1:9,:);zeros(3,12)];
 AEd=eye(12)+Ts*AE;
 BE=[Bm;zeros(3,5)];
