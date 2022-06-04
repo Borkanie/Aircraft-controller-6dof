@@ -1,4 +1,4 @@
-function [pointOfEquilibrium,Am,Bm,Cnew,Km,A,B,C,E] = ControllerAroundPointOfOperation(operationStates,operatingInputs,operatingWinds)
+function [pointOfEquilibrium,Am,Bm,Cnew,Km,A,B,C,E,CTF] = ControllerAroundPointOfOperation(operationStates,operatingInputs,operatingWinds)
 pointOfEquilibrium=PointOfEquilibrium(operationStates, operatingInputs );
 syms T DeltaSt DeltaRud DeltaAlL DeltaAlR
 syms u v w Pozx Pozy Pozz Phi Theta Psi p q r
@@ -28,7 +28,7 @@ Km=place(Am,Bm,P);
 %verificam rezultat
 eig(Am-Bm*Km);
 Cnew=eye(9);
-% Cnew=subs(systemGradient([Rearth2body(-Phi,-Theta,-Psi)*[u;v;w]],states), ...
-%     [states inputs],[pointOfEquilibrium.States pointOfEquilibrium.Inputs]);
-% Cnew=double(Cnew(:,1:12));
+CTF=subs(systemGradient([Rearth2body(-Phi,-Theta,-Psi)*[u-uw;v-vw;w-ww]],[states(1:9) winds]), ...
+    [states inputs winds],[pointOfEquilibrium.States pointOfEquilibrium.Inputs operatingWinds.']);
+CTF=double(CTF);
 end

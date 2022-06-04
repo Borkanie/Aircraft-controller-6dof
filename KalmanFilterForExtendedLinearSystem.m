@@ -1,20 +1,20 @@
 function [] = KalmanFilterForExtendedLinearSystem(Ad,Bd,Cd,Kd,punctDeEchilibru)
-R=eye(9)*3;
+R=eye(9)/1;
 Q=eye(12)*1;
-Q(10:12,10:12)=1/10*Q(10:12,10:12);
+Q(10:12,10:12)=5*Q(10:12,10:12);
+equilibriumpoints=[punctDeEchilibru.States(1:9).';punctDeEchilibru.States(13:15).'];
 %pedictie de precizie intiala
 P=eye(12)/100000;
 %numar de iterati
 iter=500;
 Ts=0.1;
-x=[punctDeEchilibru.States(1:9).';punctDeEchilibru.States(13:15).'];
-xest=x;
+x=[punctDeEchilibru.States(1:9).';[1,1,1].'];
+xest=zeros(12,1);
 y=x(1:9);
 for n=2:iter
-    u(:,n-1)=-Kd*(xest(:,n-1)- ...
-        [punctDeEchilibru.States(1:9).';punctDeEchilibru.States(13:15).'])+punctDeEchilibru.Inputs.';
+    u(:,n-1)=-Kd*xest(:,n-1)+punctDeEchilibru.Inputs.';
     if n>30
-        punctDeEchilibru.States(13:15)=[1,3,1];
+        punctDeEchilibru.States(13:15)=[1,2,1];
     else
         punctDeEchilibru.States(13:15)=[1,1,1];
     end
@@ -23,12 +23,12 @@ for n=2:iter
     x(10:12,n)=punctDeEchilibru.States(13:15).';
     reading_noise=[(rand(3,1)-rand(3,1))*.3;(rand(6,1)-rand(6,1))*.1];
     y(:,n)=Cd*x(:,n)+[reading_noise];
-        xpred=Ad*(xest(:,n-1)-[punctDeEchilibru.States(1:9).';punctDeEchilibru.States(13:15).'])...
+        xpred=Ad*xest(:,n-1)...
             +Bd*(u(:,n-1)-punctDeEchilibru.Inputs.');
         Pred=Ad*P*Ad.'+Q;
         Kn=Pred*Cd.'/(Cd*Pred*Cd.'+R);
         xest(:,n)=(xpred+Kn*((y(:,n-1)-punctDeEchilibru.States(1:9).')- ...
-            Cd*xpred))+[punctDeEchilibru.States(1:9).';punctDeEchilibru.States(13:15).'];
+            Cd*xpred));
         P=(eye(12)-Kn*Cd)*Pred*(eye(12)-Kn*Cd).'+Kn*R*Kn.';
 
 end
@@ -38,7 +38,7 @@ f1=figure(1);
 clf(f1)
 for i=1:12    
     subplot(12,1,i)
-    plot(xest(i,:))
+    plot(xest(i,:)+equilibriumpoints(i))
     hold on   
     subplot(12,1,i)
     plot(x(i,:))
