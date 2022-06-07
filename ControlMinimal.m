@@ -28,25 +28,40 @@ CEd=[C(1:9,1:9),zeros(9,3)];
 rank(obsv(AEd,CEd))
 KEmd=[Kmd zeros(5,3)];
 %kalman filter
-KalmanFilterForExtendedLinearSystem(AEd,BEd,CEd,KEmd,PointOfEquilibrium([pointOfEquilibrium.States,1,1,1],pointOfEquilibrium.Inputs))
+KalmanFilterForExtendedLinearSystem(AEd,BEd,CEd,KEmd,PointOfEquilibrium([pointOfEquilibrium.States,1,1,1],pointOfEquilibrium.Inputs,[0,0,0]))
 
-statespace=ss(AE-BE*[Km zeros(5,3)],BE,CTF,zeros(3,5));
+Kss=[Km zeros(5,3)];
+statespace=ss(AE-BE*Kss,BE,CTF,zeros(3,5));
 H=minreal(zpk(c2d(tf(statespace),Ts)),.15);
 z=tf([1 0],1,Ts);
 H=H/z;
 %output/input
-
-h11=tf(1,[1 1],Ts);
-h22=tf(1,[1 1],Ts);
-h33=tf(1,[1 1],Ts);
-
-Hr11=h11/H(1,1)*1/(1-h11);
-Hr22=h22/H(3,2)*1/(1-h22);
-Hr33=h33/H(2,3)*1/(1-h33);
-Hr43=1/2*h33/H(3,4)*1/(1-h33);
-Hr53=1/2*h33/H(3,4)*1/(1-h33);
-Hr=[Hr11,0,0;
-    0,Hr22,0;
-    0,0,Hr33;
-    0,0,Hr43;
-    0,0,Hr53]
+%Gain matrix
+Gm=evalfr(H,1);
+RGA=rga(Gm)
+h11=tf(1,[1 100],Ts);
+h22=tf(1,[1 100],Ts);
+h33=tf(1,[1 100],Ts);
+Hdecuplat=[H(1,1),0,0;0,0,H(2,3);0,H(3,2),0;];
+% Hr11=h11/H(1,1)*1/(1-h11);
+% Hr22=h22/H(3,2)*1/(1-h22);
+% Hr33=h33/H(2,3)*1/(1-h33);
+% Hr=[Hr11,0,0;
+%     0,Hr22,0;
+%     0,0,Hr33];
+Hdorit=[h11,0,0;
+    0,0,h33;
+    0,h22,0;];
+Hr=minreal(-(Hdorit-1)\Hdorit/Hdecuplat,0.1);
+Htest=zpk(minreal(series(Hr,Hdecuplat)/(1+series(Hr,Hdecuplat)),0.1));
+Hr=[Hr;0,0,0;0,0,0];
+Hnew=zpk(minreal(series(Hr,H)/(1+series(Hr,H)),0.1))
+[numReg11,denReg11]=tfdata(Hr(1,1),'v');
+[numReg12,denReg12]=tfdata(Hr(1,2),'v');
+[numReg13,denReg13]=tfdata(Hr(1,3),'v');
+[numReg21,denReg21]=tfdata(Hr(2,1),'v');
+[numReg22,denReg22]=tfdata(Hr(2,2),'v');
+[numReg23,denReg23]=tfdata(Hr(2,3),'v');
+[numReg31,denReg31]=tfdata(Hr(3,1),'v');
+[numReg32,denReg32]=tfdata(Hr(3,2),'v');
+[numReg33,denReg33]=tfdata(Hr(3,3),'v');

@@ -1,5 +1,5 @@
 function [pointOfEquilibrium,Am,Bm,Cnew,Km,A,B,C,E,CTF] = ControllerAroundPointOfOperation(operationStates,operatingInputs,operatingWinds)
-pointOfEquilibrium=PointOfEquilibrium(operationStates, operatingInputs );
+pointOfEquilibrium=PointOfEquilibrium(operationStates, operatingInputs ,operatingWinds);
 syms T DeltaSt DeltaRud DeltaAlL DeltaAlR
 syms u v w Pozx Pozy Pozz Phi Theta Psi p q r
 syms uw vw ww
