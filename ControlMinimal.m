@@ -1,4 +1,4 @@
-function [AEd,BEd,CEd,KEmd]=ControlMinimal(pointOfOperation)
+function [AEd,BEd,CEd,KEmd,Cmd]=ControlMinimal(pointOfOperation)
 u0=11.45;
 w0=1.66464;
 Theta0=atan2(w0,u0);
@@ -27,8 +27,8 @@ CEd=[C(1:9,1:9),zeros(9,3)];
 rank(obsv(AEd,CEd))
 KEmd=[Kmd -Kmd(:,1:3)];
 %kalman filter
-KalmanFilterForExtendedLinearSystem(AEd,BEd,CEd,KEmd,PointOfEquilibrium( ...
-    [pointOfOperation.States,pointOfOperation.Winds],pointOfOperation.Inputs,[pointOfOperation.Winds]));
+%KalmanFilterForExtendedLinearSystem(AEd,BEd,CEd,KEmd,PointOfEquilibrium( ...
+%    [pointOfOperation.States,pointOfOperation.Winds],pointOfOperation.Inputs,[pointOfOperation.Winds]));
 
 Kss=[Km zeros(5,3)];
 statespace=ss(AE-BE*Kss,BE,CTF,zeros(3,5));
