@@ -9,7 +9,7 @@ operationStates=[u0;0;v0;0;0;0;0;Theta0;0;0;0;100];
 operatingInputs=[5.576,0,0,0,0];
 operatingWinds=[0;0;0];
 
-pointOfEquilibrium=PointOfEquilibrium(operationStates.', operatingInputs );
+pointOfEquilibrium=PointOfEquilibrium(operationStates.', operatingInputs, [0,0,0]);
 syms T DeltaSt DeltaRud DeltaAlL DeltaAlR
 syms u v w px py pz Phi Theta Psi p q r
 inputs=[T,DeltaSt,DeltaRud,DeltaAlL,DeltaAlR];

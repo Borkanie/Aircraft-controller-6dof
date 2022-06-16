@@ -1,6 +1,7 @@
 states=[11.8,0,1.8,0,0,0,0,0.1,0,0,0,100];
 inputs=[5.5,0,0,0,0];
 Controllers=OperatingPoint(states,inputs,[-3,-2,-2]);
+Ts=0.1;
 for uw=-0:1:1
     for vw=-0:1:1
         for ww=-0:1:1
